@@ -1,0 +1,186 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    transition: left 0.3s;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.menu-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 12px;
+    background: #667eea;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar button:hover {
+    background: #5567d1;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 400px;
+    margin: auto;
+    backdrop-filter: blur(5px);
+    color: #333;
+    position: relative;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #444;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    outline: none;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #888;
+}
+
+.posts-list .post {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.posts-list .post h2 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #444;
+}
+
+.posts-list .post p {
+    color: #666;
+}
+
+.posts-list .post-actions button {
+    margin-right: 10px;
+}
+/* Сховати меню за замовчуванням */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -250px; /* Приховане меню */
+    background: linear-gradient(to right, #5A67D8, #667EEA);
+    transition: left 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+}
+
+/* Відкривається меню */
+.sidebar.open {
+    left: 0;
+}
+
+/* Стилізація кнопки */
+.menu-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000; /* Щоб кнопка була поверх меню */
+    background: #5A67D8;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.menu-button:hover {
+    background: #434190;
+}
+/* Основний стиль для всіх кнопок */
+button {
+    background: #F8F9FA; /* Світлий фон */
+    color: #333; /* Темний текст */
+    border: 2px solid #5A67D8; /* Тонка синя рамка */
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ефект при наведенні */
+button:hover {
+    background: #E2E8F0; /* Легкий сірий відтінок */
+    border-color: #434190; /* Трохи темніша рамка */
+}
+
+/* Стиль кнопки меню */
+.menu-button {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+}
+
+/* Вирівнювання кнопок у меню */
+.sidebar button {
+    width: 80%;
+    margin: 10px auto;
+    display: block;
+}

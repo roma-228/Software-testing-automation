@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Profile</title>
+</head>
+<body>
+
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <button id="blogPosts" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Blog Posts</button>
+        <button id="profileMenu" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Profile</button>
+        <button id="viewAllPostsButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">View All Posts</button>
+        <button id="logoutButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Logout</button>
+    </div>
+
+    <div class="container">
+        <h1>Profile</h1>
+
+        <div class="profile-info" id="profileInfo">
+            <p>Loading profile...</p>
+        </div>
+
+        <div class="post-form">
+            <h3>Create a New Post</h3>
+            <input type="text" id="postTitle" placeholder="Post Title" required>
+            <textarea id="postContent" placeholder="Post Content" rows="5" required></textarea>
+            <button id="createPostButton">Create Post</button>
+        </div>
+
+        <div class="posts-list" id="postsList">
+            <p>Loading posts...</p>
+        </div>
+    </div>
+
+    <script>
+        const email = new URLSearchParams(window.location.search).get('email');
+        const username = new URLSearchParams(window.location.search).get('username');
+
+        document.getElementById('blogPosts').addEventListener('click', () => {
+            window.location.href = `index.html?email=${encodeURIComponent(email)}`;
+        });
+
+        document.getElementById('profileMenu').addEventListener('click', () => {
+            window.location.href = `profile.html?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`;
+        });
+
+        function toggleMenu() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        async function getUserProfile() {
+            const response = await fetch(`http://localhost:3000/profile?email=${encodeURIComponent(email)}`);
+            if (response.ok) {
+                const { user, posts } = await response.json();
+                document.getElementById('profileInfo').innerHTML = `
+                    <p><strong>Username:</strong> ${user.username}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                `;
+                const postsList = document.getElementById('postsList');
+                postsList.innerHTML = '';
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <p>${post.content}</p>
+                        <div class="post-actions">
+                            <button onclick="editPost('${post._id}', '${post.title}', '${post.content}')">Edit</button>
+                            <button onclick="deletePost('${post._id}')">Delete</button>
+                        </div>
+                    `;
+                    postsList.appendChild(postElement);
+                });
+            } else {
+                document.getElementById('profileInfo').innerHTML = `<p>Error loading profile. Please log in.</p>`;
+            }
+        }
+
+        document.getElementById('viewAllPostsButton').addEventListener('click', () => {
+            window.location.href = `blogs.html?email=${encodeURIComponent(email)}`;
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
+        getUserProfile();
+
+        document.getElementById('createPostButton').addEventListener('click', async () => {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            const response = await fetch('http://localhost:3000/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, content, email }),
+            });
+
+            if (response.ok) {
+                alert('Post created successfully');
+                getUserProfile();
+            } else {
+                alert('Error creating post');
+            }
+        });
+        function toggleMenu() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+        async function deletePost(postId) {
+            const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('Post deleted successfully');
+                getUserProfile();
+            } else {
+                alert('Error deleting post');
+            }
+        }
+        async function editPost(postId, title, content) {
+            const newTitle = prompt("Edit post title", title);
+            const newContent = prompt("Edit post content", content);
+
+            if (newTitle && newContent) {
+                const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: newTitle, content: newContent }),
+                });
+
+                if (response.ok) {
+                    alert('Post updated successfully');
+                    getUserProfile();
+                } else {
+                    alert('Error updating post');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

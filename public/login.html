@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <div id="error" class="error-message"></div>
+            <div class="link">
+                <a href="forgot-password.html">Forgot Password?</a>
+            </div>
+            <div class="link">
+                <a href="register.html">Create an Account</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorDiv = document.getElementById('error');
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                const username = userData.username;
+                window.location.href = `profile.html?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`;
+            } else {
+                const errorData = await response.json();
+                errorDiv.textContent = errorData.error;
+            }
+        });
+    </script>
+</body>
+</html>
