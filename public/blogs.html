@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+    <title>All Posts</title>
+
+</head>
+<body>
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <button id="blogPosts" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Blog Posts</button>
+        <button id="profileMenu" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Profile</button>
+        <button id="viewAllPostsButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">View All Posts</button>
+        <button id="logoutButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Logout</button>
+    </div>
+    <div class="container">
+        <h1>All Posts</h1>
+        <div id="postsList">Loading posts...</div>
+
+    </div>
+
+    <script>
+        const email = new URLSearchParams(window.location.search).get('email');
+        const username = new URLSearchParams(window.location.search).get('username');
+        function toggleMenu() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        function toggleMenu() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+        document.getElementById('profileMenu').addEventListener('click', () => {
+            window.location.href = `profile.html?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`;
+        });
+        document.getElementById('blogPosts').addEventListener('click', () => {
+            window.location.href = `index.html?email=${encodeURIComponent(email)}`;
+        });
+        document.getElementById('viewAllPostsButton').addEventListener('click', () => {
+            window.location.href = `blogs.html?email=${encodeURIComponent(email)}`;
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
+
+
+        async function getPosts() {
+            const response = await fetch('http://localhost:3000/posts');
+            const posts = await response.json();
+
+            const postsList = document.getElementById('postsList');
+            postsList.innerHTML = '';
+
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+                postElement.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <button class="button" onclick="window.location.href='blog.html?id=${post._id}&email=${encodeURIComponent(email)}'">Read More</button>
+                `;
+                postsList.appendChild(postElement);
+            });
+        }
+
+        getPosts();
+    </script>
+</body>
+</html>

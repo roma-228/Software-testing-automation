@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Post Details</title>
+
+</head>
+
+<body>
+    <button class="menu-button" onclick="toggleMenu()">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <button id="blogPosts" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Blog Posts</button>
+        <button id="profileMenu" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Profile</button>
+        <button id="viewAllPostsButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">View All Posts</button>
+        <button id="logoutButton" style="background-color: #667EEA; color: white; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Logout</button>
+    </div>
+    <div class="container">
+        <h1>Loading post...</h1>
+        <div id="postDetails"></div>
+
+        <h2>Comments</h2>
+        <div id="comments">
+            <p>Loading comments...</p>
+        </div>
+
+        <h3>Leave a Comment</h3>
+        <form id="commentForm">
+            <textarea id="commentContent" placeholder="Your comment..." required></textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+
+    <script>
+        const email = new URLSearchParams(window.location.search).get('email');
+        const username = new URLSearchParams(window.location.search).get('username');
+        function toggleMenu() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        function toggleMenu() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+        document.getElementById('profileMenu').addEventListener('click', () => {
+            window.location.href = `profile.html?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}`;
+        });
+        document.getElementById('blogPosts').addEventListener('click', () => {
+            window.location.href = `index.html?email=${encodeURIComponent(email)}`;
+        });
+        document.getElementById('viewAllPostsButton').addEventListener('click', () => {
+            window.location.href = `blogs.html?email=${encodeURIComponent(email)}`;
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
+        const postId = new URLSearchParams(window.location.search).get('id');
+        async function loadPostAndComments() {
+            try {
+
+                const postResponse = await fetch(`http://localhost:3000/posts/${postId}`);
+                const postData = await postResponse.json();
+
+                const post = postData.post;
+                const comments = postData.comments;
+
+                document.querySelector('h1').innerText = post.title;
+                document.getElementById('postDetails').innerHTML = `<h2>${post.title}</h2><p>${post.content}</p><p><strong>Author:</strong> ${post.author.username}</p>`;
+
+                const commentsHtml = comments.map(comment => `
+                    <div class="comment">
+                        <div class="author">${comment.author.username}</div>
+                        <div class="content">${comment.content}</div>
+                    </div>
+                `).join('');
+                document.getElementById('comments').innerHTML = commentsHtml;
+            } catch (error) {
+                console.error('Error loading post:', error);
+            }
+        }
+
+        async function addComment(event) {
+            event.preventDefault();
+            const content = document.getElementById('commentContent').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ postId, email, content })
+                });
+
+                if (response.ok) {
+                    loadPostAndComments();
+                } else {
+                    const errorData = await response.json();
+                    alert('Error adding comment: ' + errorData.error);
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        }
+
+        document.getElementById('commentForm').addEventListener('submit', addComment);
+
+        loadPostAndComments();
+    </script>
+</body>
+
+</html>
