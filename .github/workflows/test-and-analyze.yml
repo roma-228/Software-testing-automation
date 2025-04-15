@@ -9,7 +9,12 @@ on:
 jobs:
   test-and-lint:
     runs-on: ubuntu-latest
-
+    services:
+      mongo:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+          
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
