@@ -53,7 +53,7 @@
         }
 
         async function getUserProfile() {
-            const response = await fetch(`http://localhost:3000/profile?email=${encodeURIComponent(email)}`);
+            const response = await fetch(`http://localhost:3000/api/auth/profile?email=${encodeURIComponent(email)}`);
             if (response.ok) {
                 const { user, posts } = await response.json();
                 document.getElementById('profileInfo').innerHTML = `
@@ -93,7 +93,7 @@
         document.getElementById('createPostButton').addEventListener('click', async () => {
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
-            const response = await fetch('http://localhost:3000/posts', {
+            const response = await fetch('http://localhost:3000/api/posts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, content, email }),
@@ -111,7 +111,7 @@
             sidebar.classList.toggle("open");
         }
         async function deletePost(postId) {
-            const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+            const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
                 method: 'DELETE',
             });
 
@@ -127,7 +127,7 @@
             const newContent = prompt("Edit post content", content);
 
             if (newTitle && newContent) {
-                const response = await fetch(`http://localhost:3000/posts/${postId}`, {
+                const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ title: newTitle, content: newContent }),
