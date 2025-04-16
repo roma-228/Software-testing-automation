@@ -14,7 +14,7 @@ jobs:
         image: mongo:4.4
         ports:
           - 27017:27017
-          
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,3 +34,11 @@ jobs:
       - name: Run Jest tests with coverage
         run: |
           npm test -- --coverage
+
+      - name: Install Selenium Side Runner
+        run: |
+          npm install -g selenium-side-runner
+
+      - name: Run Selenium Test
+        run: |
+          selenium-side-runner tests/selenium/test_Orig.side
