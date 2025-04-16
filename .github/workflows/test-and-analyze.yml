@@ -41,4 +41,4 @@ jobs:
 
       - name: Run Selenium Test
         run: |
-          selenium-side-runner tests/selenium/test_Orig.side
+          selenium-side-runner -c "browserName=chrome goog:chromeOptions.args=[headless,disable-gpu,no-sandbox]" tests/selenium/test_Orig.side
