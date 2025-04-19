@@ -1,19 +1,22 @@
 *** Settings ***
 Library           SeleniumLibrary
-Suite Setup       Open Browser To Blog
-Suite Teardown    Close Browser
+Library           Collections
 
 *** Variables ***
+${BROWSER}        Chrome
 ${URLREG}         http://localhost:3000/register.html
 ${URLLOGIN}       http://localhost:3000/login.html
-${BROWSER}        Chrome
 ${EMAIL}          testrobot@gmail.com
 ${PASSWORD}       testrobot
 ${USERNAME}       testrobot
 
 *** Keywords ***
 Open Browser To Blog
-    Open Browser    about:blank    ${BROWSER}
+    ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+    Call Method    ${options}    add_argument    --headless
+    Call Method    ${options}    add_argument    --no-sandbox
+    Call Method    ${options}    add_argument    --disable-dev-shm-usage
+    Create Webdriver    Chrome    chrome_options=${options}
     Maximize Browser Window
 
 *** Test Cases ***
