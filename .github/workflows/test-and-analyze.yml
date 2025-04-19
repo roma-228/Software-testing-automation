@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-          
+
       - name: Run ESLint
         run: |
           npx eslint . --ext .js
@@ -40,9 +40,9 @@ jobs:
 
       - name: Start your server (node server.js)
         run: |
-          node server.js &            
-          sleep 5   
-          
+          node server.js &
+          sleep 5
+
       - name: Install Selenium Side Runner
         run: |
           npm install -g selenium-side-runner
@@ -50,3 +50,22 @@ jobs:
       - name: Run Selenium Test
         run: |
           selenium-side-runner -c "browserName=chrome goog:chromeOptions.args=[headless,disable-gpu,no-sandbox]" tests/selenium/test_Orig.side
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install robotframework
+          pip install robotframework-seleniumlibrary
+          pip install webdrivermanager
+          webdrivermanager chrome --linkpath /usr/local/bin
+
+      - name: Download Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run Robot tests
+        run: |
+          robot --outputdir ./tests/keyword-driven/report tests/keyword-driven
