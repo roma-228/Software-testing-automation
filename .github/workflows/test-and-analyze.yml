@@ -76,4 +76,4 @@ jobs:
           sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Run test script
-        run: python .\tests\SeleniumWebDriver\test_register_and_login.py
+        run: python ./tests/SeleniumWebDriver/test_register_and_login.py
