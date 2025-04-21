@@ -77,3 +77,7 @@ jobs:
 
       - name: Run test script
         run: python ./tests/SeleniumWebDriver/test_register_and_login.py
+        
+      - name: Run Behevour Driven Testing
+        run: npx cucumber-js tests/cucumber/user-auth.feature
+
