@@ -50,3 +50,7 @@ jobs:
       - name: Run Selenium Test
         run: |
           selenium-side-runner -c "browserName=chrome goog:chromeOptions.args=[headless,disable-gpu,no-sandbox]" tests/selenium/test_Orig.side
+
+      - name: Run Behevour Driven Testing
+        run: |
+          npx cucumber-js tests/cucumber/user-auth.feature
