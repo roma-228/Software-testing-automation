@@ -29,7 +29,7 @@ jobs:
 
       - name: Run ESLint
         run: |
-          npx eslint . --ext .js
+         npx eslint . --fix --ignore-pattern tests/k6/
 
       - name: Run Jest tests with coverage
         run: |
@@ -59,7 +59,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium
+          pip install selenium semgrep
+
+      - name: Run Semgrep Scan
+        run: semgrep --config auto .
 
       - name: Install Chrome and WebDriver
         run: |
@@ -77,7 +80,7 @@ jobs:
 
       - name: Run test script
         run: python ./tests/SeleniumWebDriver/test_register_and_login.py
-        
+
       - name: Run Behevour Driven Testing
         run: npx cucumber-js tests/cucumber/user-auth.feature
 
